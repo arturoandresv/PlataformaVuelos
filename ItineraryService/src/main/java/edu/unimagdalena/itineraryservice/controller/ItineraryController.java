@@ -6,12 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("api/itinerary/v1")
 @RequiredArgsConstructor

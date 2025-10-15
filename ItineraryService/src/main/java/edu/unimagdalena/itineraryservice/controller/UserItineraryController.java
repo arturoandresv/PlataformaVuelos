@@ -3,6 +3,7 @@ package edu.unimagdalena.itineraryservice.controller;
 import edu.unimagdalena.itineraryservice.dto.UserItineraryDTO;
 import edu.unimagdalena.itineraryservice.service.UserItineraryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class UserItineraryController {
     @PostMapping
     public ResponseEntity<UserItineraryDTO> create(@RequestBody UserItineraryDTO request) {
         UserItineraryDTO saved = userItineraryService.save(request);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping("/{id}")
