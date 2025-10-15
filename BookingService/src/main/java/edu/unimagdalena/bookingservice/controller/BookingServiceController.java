@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @RestController
@@ -19,19 +20,20 @@ public class BookingServiceController {
                 "RES-12345",
                 "CONFIRMED",
                 "HTL-98765",
-                new Money("USD", 299.99)
+                new Money("USD", new BigDecimal(299.9))
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reservation);
     }
 
-    @GetMapping("/{id}")
+    /*
+    *
+    *  @GetMapping("/{id}")
     public ResponseEntity<ReservationDTO> getReservation(@PathVariable String id) {
 
-        return Map.of(
-                {}
-        );
+        return ResponseEntity.ok();
     }
+    * */
 
 
 

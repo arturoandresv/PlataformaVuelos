@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        # RUTA: Itinerary Service
+        - id: itinerary_route
+          uri: http://itinerary-service:8081
+          predicates:
+            - Path=/api/public/itinerary/**
+          filters:
+            - name: RewritePath
+              args:
+                regexp: /api/public/itinerary/(?<segment>.*)
+                replacement: /api/itinerary/v1/${segment}
+            - name: CircuitBreaker
+              args:
+                name: itineraryCB
+                fallbackUri: forward:/fallback/itinerary
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@apiKeyResolver}"
+
+        # RUTA: Booking Service
+        - id: booking_route
+          uri: http://booking-service:8082
+          predicates:
+            - Path=/api/public/booking/**
+          filters:
+            - name: RewritePath
+              args:
+                regexp: /api/public/booking/(?<segment>.*)
+                replacement: /api/booking/v1/${segment}
+            - name: CircuitBreaker
+              args:
+                name: bookingCB
+                fallbackUri: forward:/fallback/booking
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@apiKeyResolver}"
+
+      redis-rate-limiter:
+        replenishRate: 10     # Tokens generados por segundo
+        burstCapacity: 20     # Máximo de peticiones simultáneas permitidas
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      itineraryCB:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+      bookingCB:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
