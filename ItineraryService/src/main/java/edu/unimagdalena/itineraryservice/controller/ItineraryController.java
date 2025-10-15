@@ -1,0 +1,39 @@
+package edu.unimagdalena.itineraryservice.controller;
+
+import edu.unimagdalena.itineraryservice.dto.*;
+import edu.unimagdalena.itineraryservice.service.ItineraryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("api/itinerary/v1")
+@RequiredArgsConstructor
+public class ItineraryController {
+
+    private final ItineraryService itineraryService;
+
+    @GetMapping(value = "/search", params = {"origin","destination","departDate","returnDate","adults","rooms"})
+    public SearchResponse getItinerary(
+            @RequestParam String origin,
+            @RequestParam String destination,
+            @RequestParam String departDate,
+            @RequestParam String returnDate,
+            @RequestParam Integer adults,
+            @RequestParam Integer children,
+            @RequestParam Integer rooms
+    ) {
+        return itineraryService.getItinerary(origin, destination, departDate, returnDate, adults, children, rooms) ;
+    }
+
+    @GetMapping("/details/{id}")
+    public ItineraryDTO getDetails(@PathVariable String id) {
+        return itineraryService.getDetails(id);
+    }
+}
