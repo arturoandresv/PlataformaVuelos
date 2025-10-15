@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bookings
+    username: travel
+    password: travel
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # o create-drop si quieres recrear las tablas en cada arranque
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8082   # para evitar conflicto con el gateway o itinerary service
+

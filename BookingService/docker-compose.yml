@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres-travel
+    environment:
+      POSTGRES_USER: travel
+      POSTGRES_PASSWORD: travel
+      POSTGRES_DB: bookings
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U travel -d bookings"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  bookingservice:
+    build:
+      context: ./BookingService
+      dockerfile: Dockerfile
+    container_name: booking-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookings
+      SPRING_DATASOURCE_USERNAME: travel
+      SPRING_DATASOURCE_PASSWORD: travel
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    restart: always
+
+volumes:
+  postgres_data:
