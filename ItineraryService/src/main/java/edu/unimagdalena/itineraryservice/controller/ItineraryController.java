@@ -13,7 +13,7 @@ public class ItineraryController {
 
     private final ItineraryService itineraryService;
 
-    @GetMapping(value = "/search", params = {"origin","destination","departDate","returnDate","adults","rooms"})
+    @GetMapping(value = "/search")
     public SearchResponse getItinerary(
             @RequestParam String origin,
             @RequestParam String destination,
@@ -26,8 +26,8 @@ public class ItineraryController {
         return itineraryService.getItinerary(origin, destination, departDate, returnDate, adults, children, rooms) ;
     }
 
-    @GetMapping("/details/{id}")
-    public ItineraryDTO getDetails(@PathVariable String id) {
-        return itineraryService.getDetails(id);
+    @GetMapping("/details/{itineraryId}")
+    public ItineraryDTO getDetails(@PathVariable String itineraryId) {
+        return itineraryService.getDetails(itineraryId);
     }
 }
